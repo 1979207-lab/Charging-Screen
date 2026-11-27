@@ -1,18 +1,29 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#101116">
-<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
-<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="CHARGING SCREEN PRO" android:textColor="#00BEFF" android:textSize="24sp" android:textStyle="bold" android:gravity="center" android:padding="20dp"/>
-<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Формат часов" android:textColor="#FFFFFF"/>
-<Spinner android:id="@+id/clockFormat" android:layout_width="match_parent" android:layout_height="50dp"/>
-<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Цвет анимации" android:textColor="#FFFFFF"/>
-<Spinner android:id="@+id/animationColor" android:layout_width="match_parent" android:layout_height="50dp"/>
-<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Стиль экрана" android:textColor="#FFFFFF"/>
-<Spinner android:id="@+id/screenStyle" android:layout_width="match_parent" android:layout_height="50dp"/>
-<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Яркость экрана" android:textColor="#FFFFFF"/>
-<SeekBar android:id="@+id/brightness" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100" android:progress="65"/>
-<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Чувствительность свайпа" android:textColor="#FFFFFF"/>
-<SeekBar android:id="@+id/swipeSensitivity" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="250" android:progress="100"/>
-<CheckBox android:id="@+id/soundEnabled" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Звуковой сигнал при 100%" android:textColor="#FFFFFF"/>
-<CheckBox android:id="@+id/autoBrightness" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Автояркость по датчику освещённости" android:textColor="#FFFFFF"/>
-<Button android:id="@+id/startService" android:layout_width="match_parent" android:layout_height="56dp" android:text="Включить мониторинг"/>
-<Button android:id="@+id/stopService" android:layout_width="match_parent" android:layout_height="56dp" android:text="Выключить мониторинг"/>
-</LinearLayout></ScrollView>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="24dp">
+        <TextView android:id="@+id/screenTitle" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:text="CHARGING SCREEN PRO"
+            android:textColor="?attr/colorAccent" android:textSize="24sp" android:textStyle="bold"
+            android:gravity="center" android:padding="20dp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Тема приложения" android:textColor="?android:attr/textColorPrimary"/>
+        <Spinner android:id="@+id/appTheme" android:layout_width="match_parent" android:layout_height="50dp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Цвет интерфейса" android:textColor="?android:attr/textColorPrimary"/>
+        <Spinner android:id="@+id/uiColor" android:layout_width="match_parent" android:layout_height="50dp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Формат часов" android:textColor="?android:attr/textColorPrimary"/>
+        <Spinner android:id="@+id/clockFormat" android:layout_width="match_parent" android:layout_height="50dp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Цвет анимации" android:textColor="?android:attr/textColorPrimary"/>
+        <Spinner android:id="@+id/animationColor" android:layout_width="match_parent" android:layout_height="50dp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Стиль экрана" android:textColor="?android:attr/textColorPrimary"/>
+        <Spinner android:id="@+id/screenStyle" android:layout_width="match_parent" android:layout_height="50dp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Яркость экрана" android:textColor="?android:attr/textColorPrimary"/>
+        <SeekBar android:id="@+id/brightness" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100" android:progress="65"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Чувствительность свайпа" android:textColor="?android:attr/textColorPrimary"/>
+        <SeekBar android:id="@+id/swipeSensitivity" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="250" android:progress="100"/>
+        <CheckBox android:id="@+id/soundEnabled" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Звуковой сигнал при 100%" android:textColor="?android:attr/textColorPrimary"/>
+        <CheckBox android:id="@+id/autoBrightness" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Автояркость по датчику освещённости" android:textColor="?android:attr/textColorPrimary"/>
+        <Button android:id="@+id/startService" android:layout_width="match_parent" android:layout_height="56dp" android:text="Включить мониторинг"/>
+        <Button android:id="@+id/stopService" android:layout_width="match_parent" android:layout_height="56dp" android:text="Выключить мониторинг"/>
+    </LinearLayout>
+</ScrollView>
