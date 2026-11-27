@@ -1,0 +1,10 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/root" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#000000">
+<LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="18dp">
+<TextView android:id="@+id/clock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="23:45" android:textColor="#FFFFFF" android:textSize="76sp" android:fontFamily="sans-serif-light"/>
+<TextView android:id="@+id/date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#AAAAAA" android:textSize="17sp" android:layout_marginTop="8dp"/>
+<com.chargingscreen.pro.ChargingView android:id="@+id/chargingView" android:layout_width="300dp" android:layout_height="300dp" android:layout_marginTop="20dp"/>
+<TextView android:id="@+id/powerInfo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#DDDDDD" android:textSize="16sp" android:layout_marginTop="10dp"/>
+<TextView android:id="@+id/timeRemaining" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#999999" android:textSize="14sp" android:layout_marginTop="7dp"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CHARGING" android:textColor="#777777" android:layout_marginTop="25dp"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Свайп вверх или касание — закрыть" android:textColor="#666666" android:textSize="12sp" android:layout_marginTop="30dp"/>
+</LinearLayout></FrameLayout>
