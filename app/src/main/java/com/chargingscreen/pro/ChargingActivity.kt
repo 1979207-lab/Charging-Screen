@@ -4,6 +4,10 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.*
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.view.*
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
@@ -12,7 +16,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
-class ChargingActivity:AppCompatActivity(){
+class ChargingActivity:AppCompatActivity(),SensorEventListener{
+ private lateinit var sensorManager:SensorManager
+ private var lightSensor:Sensor?=null
+ private var ambientBrightness:Float?=null
  private val prefs by lazy{getSharedPreferences("charging_settings",MODE_PRIVATE)}
  private val handler=Handler(Looper.getMainLooper())
  private lateinit var clock:TextView
@@ -38,6 +45,8 @@ class ChargingActivity:AppCompatActivity(){
   window.statusBarColor=Color.BLACK;window.navigationBarColor=Color.BLACK
   @Suppress("DEPRECATION")
   window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+  sensorManager=getSystemService(SENSOR_SERVICE) as SensorManager
+  lightSensor=sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
   setContentView(R.layout.activity_charging)
   clock=findViewById(R.id.clock);date=findViewById(R.id.date);info=findViewById(R.id.powerInfo)
   remaining=findViewById(R.id.timeRemaining);ring=findViewById(R.id.chargingView)
@@ -77,11 +86,23 @@ class ChargingActivity:AppCompatActivity(){
   return "Время до 100% рассчитывается телефоном"
  }
  private fun applyBrightness(){
-  val value=prefs.getInt("brightness",65).coerceIn(5,100)/100f
+  val manual=prefs.getInt("brightness",65).coerceIn(5,100)/100f
   val hour=java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
   val night=prefs.getBoolean("auto_night",false)&&(hour>=22||hour<7)
-  window.attributes=window.attributes.apply{screenBrightness=if(night)minOf(value,.15f)else value}
+  val value=if(prefs.getBoolean("auto_night",false)) ambientBrightness ?: if(night)0.15f else manual else manual
+  window.attributes=window.attributes.apply{screenBrightness=value.coerceIn(0.05f,1f)}
  }
+ override fun onResume(){super.onResume();lightSensor?.let{sensorManager.registerListener(this,it,SensorManager.SENSOR_DELAY_NORMAL)}}
+ override fun onPause(){sensorManager.unregisterListener(this);super.onPause()}
+ override fun onSensorChanged(event:SensorEvent){
+  if(event.sensor.type==Sensor.TYPE_LIGHT){
+   val lux=event.values.firstOrNull()?:return
+   ambientBrightness=when{lux<5f->0.08f;lux<30f->0.16f;lux<100f->0.28f;lux<500f->0.48f;lux<2000f->0.68f;else->0.9f}
+   applyBrightness()
+  }
+ }
+ override fun onAccuracyChanged(sensor:Sensor,accuracy:Int){}
+
  private fun hideScreen(){
   startService(Intent(this,ChargingService::class.java).setAction(ChargingService.ACTION_HIDE))
   window.decorView.animate().alpha(0f).setDuration(220).withEndAction{finish()}.start()
