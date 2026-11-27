@@ -30,7 +30,7 @@ class ChargingView(context:Context):View(context){
   canvas.drawArc(RectF(x-r,y-r,x+r,y+r),-90f,percent*3.6f,false,paint)
   paint.style=Paint.Style.FILL;paint.textAlign=Paint.Align.CENTER;paint.color=Color.WHITE
   paint.typeface=Typeface.create("sans-serif-light",Typeface.NORMAL);paint.textSize=40f*resources.displayMetrics.scaledDensity
-  canvas.drawText("$"+"{percent}%",x,y+14f,paint)
+  canvas.drawText("$percent%",x,y+14f,paint)
   paint.color=color;paint.textSize=29f*resources.displayMetrics.scaledDensity;paint.typeface=Typeface.DEFAULT_BOLD
   canvas.drawText("ϟ",x,y-35f,paint)
  }
