@@ -29,9 +29,12 @@ class ChargingService:Service(){
  }
  private fun showCharging(){
   hidden=false
-  // Background activity launches are restricted on modern Android; notification remains the fallback.
-  try{startActivity(Intent(this,ChargingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP))}catch(_:Exception){}
-  getSystemService(NotificationManager::class.java).notify(101,makeNotification())
+  // Android 10+ may block an Activity launch while the display is off.
+  // Keep the charging notification available as a reliable user-initiated entry point.
+  try {
+   startActivity(Intent(this,ChargingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+  } catch (_:Exception) { }
+  getSystemService(NotificationManager::class.java).notify(101,makeNotification(true))
  }
  override fun onStartCommand(intent:Intent?,flags:Int,startId:Int):Int{
   when(intent?.action){
@@ -48,12 +51,14 @@ class ChargingService:Service(){
    getSystemService(NotificationManager::class.java).createNotificationChannel(ch)
   }
  }
- private fun makeNotification():Notification{
-  val open=PendingIntent.getActivity(this,1,Intent(this,ChargingActivity::class.java),PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+ private fun makeNotification(isCharging:Boolean=charging):Notification{
+  val open=PendingIntent.getActivity(this,1,Intent(this,ChargingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
   val stop=PendingIntent.getService(this,2,Intent(this,ChargingService::class.java).setAction(ACTION_STOP),PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+  val text=if(isCharging) "Зарядка подключена · нажмите, чтобы открыть экран" else "Мониторинг включён · ждём зарядку"
   return NotificationCompat.Builder(this,CHANNEL).setSmallIcon(android.R.drawable.ic_lock_idle_charging)
-   .setContentTitle("Charging Screen PRO").setContentText("Мониторинг включён · нажмите для открытия")
-   .setContentIntent(open).setOngoing(true).addAction(0,"Остановить",stop).build()
+   .setContentTitle("Charging Screen PRO").setContentText(text)
+   .setPriority(NotificationCompat.PRIORITY_HIGH).setCategory(NotificationCompat.CATEGORY_STATUS)
+   .setContentIntent(open).setOngoing(true).addAction(0,"Открыть экран",open).addAction(0,"Остановить",stop).build()
  }
  override fun onDestroy(){closeTask?.let(handler::removeCallbacks);try{unregisterReceiver(batteryReceiver)}catch(_:Exception){};super.onDestroy()}
  override fun onBind(intent:Intent?):IBinder?=null
