@@ -146,9 +146,12 @@ class MainActivity : AppCompatActivity() {
     private fun Spinner.setup(items: List<String>, selected: Int, changed: (Int) -> Unit) {
         adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, items)
         setSelection(selected.coerceIn(items.indices))
+        var firstSelection = true
         onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) { changed(position) }
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (firstSelection) { firstSelection = false; if (position != selected) changed(position) } else changed(position)
+            }
         }
     }
 }
