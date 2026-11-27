@@ -20,19 +20,28 @@ class ChargingView(context:Context):View(context){
  fun setStyle(i:Int){style=i.coerceIn(0,3);invalidate()}
  override fun onDraw(canvas:Canvas){
   super.onDraw(canvas)
-  val x=width/2f;val y=height/2f;val r=min(width,height)*.34f
-  paint.style=Paint.Style.STROKE;paint.strokeWidth=13f*resources.displayMetrics.density;paint.strokeCap=Paint.Cap.ROUND
-  paint.color=color;paint.alpha=if(charging)(80+100*pulse).toInt() else 70
-  canvas.drawCircle(x,y,r+10+pulse*10,paint)
-  paint.color=Color.DKGRAY;paint.alpha=255;canvas.drawCircle(x,y,r,paint)
+  val x=width/2f;val y=height/2f
+  val r=min(width,height)*when(style){1->.37f;3->.30f;else->.34f}
+  val density=resources.displayMetrics.density
+  val stroke=density*when(style){1->7f;2->17f;3->5f;else->13f}
+  paint.style=Paint.Style.STROKE;paint.strokeWidth=stroke;paint.strokeCap=Paint.Cap.ROUND
+  if(style==2){
+   paint.color=color;paint.alpha=if(charging)(75+100*pulse).toInt() else 45
+   canvas.drawCircle(x,y,r+12*density+pulse*8*density,paint)
+  }else if(style==0){
+   paint.color=color;paint.alpha=if(charging)(45+65*pulse).toInt() else 25
+   canvas.drawCircle(x,y,r+8*density,paint)
+  }
+  val rect=RectF(x-r,y-r,x+r,y+r)
+  if(style!=3){paint.color=Color.DKGRAY;paint.alpha=230;canvas.drawCircle(x,y,r,paint)}
   paint.color=color;paint.alpha=255
-  if(style==2)paint.strokeWidth*=1.8f
-  canvas.drawArc(RectF(x-r,y-r,x+r,y+r),-90f,percent*3.6f,false,paint)
+  canvas.drawArc(rect,-90f,percent*3.6f,false,paint)
   paint.style=Paint.Style.FILL;paint.textAlign=Paint.Align.CENTER;paint.color=Color.WHITE
-  paint.typeface=Typeface.create("sans-serif-light",Typeface.NORMAL);paint.textSize=40f*resources.displayMetrics.scaledDensity
-  canvas.drawText("$percent%",x,y+14f,paint)
+  paint.typeface=Typeface.create("sans-serif-light",Typeface.NORMAL)
+  paint.textSize=(if(style==3)48f else 40f)*resources.displayMetrics.scaledDensity
+  canvas.drawText("$"+"percent%",x,y+14f*density,paint)
   paint.color=color;paint.textSize=29f*resources.displayMetrics.scaledDensity;paint.typeface=Typeface.DEFAULT_BOLD
-  canvas.drawText("ϟ",x,y-35f,paint)
+  canvas.drawText("ϟ",x,y-35f*density,paint)
  }
  override fun onDetachedFromWindow(){anim.cancel();super.onDetachedFromWindow()}
 }
