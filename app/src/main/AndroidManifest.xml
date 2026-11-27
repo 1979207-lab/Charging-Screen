@@ -11,6 +11,9 @@
   <service android:name=".ChargingService" android:exported="false" android:foregroundServiceType="specialUse">
    <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="Monitor battery charging state and offer charging display"/>
   </service>
+  <receiver android:name=".PowerConnectionReceiver" android:enabled="true" android:exported="true">
+   <intent-filter><action android:name="android.intent.action.ACTION_POWER_CONNECTED"/></intent-filter>
+  </receiver>
   <receiver android:name=".BootReceiver" android:enabled="true" android:exported="false"><intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/></intent-filter></receiver>
  </application>
 </manifest>
