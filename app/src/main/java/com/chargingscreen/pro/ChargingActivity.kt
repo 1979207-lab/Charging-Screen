@@ -53,7 +53,7 @@ class ChargingActivity:AppCompatActivity(),SensorEventListener{
   ring.setColor(prefs.getInt("color",0));ring.setStyle(prefs.getInt("style",0))
   updateClock();handler.post(clockTick)
   val filter=IntentFilter().apply{addAction(ChargingService.ACTION_UPDATE);addAction(ChargingService.ACTION_CLOSE)}
-  if(Build.VERSION.SDK_INT>=33)registerReceiver(receiver,filter,Context.RECEIVER_NOT_EXPORTED) else @Suppress("DEPRECATION") registerReceiver(receiver,filter)
+  if(Build.VERSION.SDK_INT>=33)registerReceiver(receiver,filter,Context.RECEIVER_NOT_EXPORTED) else registerReceiver(receiver,filter)
   val sticky=registerReceiver(null,IntentFilter(Intent.ACTION_BATTERY_CHANGED))
   sticky?.let{render(it.getIntExtra("plugged",0)!=0,it.getIntExtra("level",0),it.getIntExtra("temperature",-1))}
   listOf(clock,date,ring,info,remaining).forEachIndexed{i,v->v.alpha=0f;v.animate().alpha(1f).setStartDelay(i*90L).setDuration(450).setInterpolator(DecelerateInterpolator()).start()}
