@@ -24,20 +24,29 @@ class ChargingService:Service(){
    charging=false;hidden=false
    closeTask?.let(handler::removeCallbacks)
    closeTask=Runnable{sendBroadcast(Intent(ACTION_CLOSE).setPackage(packageName))}
-   handler.postDelayed(closeTask!!,3000)
+   handler.postDelayed(closeTask!!,1500)
   }
  }
  private fun showCharging(){
   hidden=false
-  // Android 10+ may block an Activity launch while the display is off.
-  // Keep the charging notification available as a reliable user-initiated entry point.
+  // Короткое пробуждение дисплея; экран зарядки использует showWhenLocked/turnScreenOn.
   try {
-   startActivity(Intent(this,ChargingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+   val pm=getSystemService(POWER_SERVICE) as PowerManager
+   @Suppress("DEPRECATION")
+   val wakeLock=pm.newWakeLock(
+    PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+    "ChargingScreenPRO:PowerConnected"
+   )
+   wakeLock.acquire(8000L)
+   startActivity(Intent(this,ChargingActivity::class.java).addFlags(
+    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+   ))
   } catch (_:Exception) { }
   getSystemService(NotificationManager::class.java).notify(101,makeNotification(true))
  }
  override fun onStartCommand(intent:Intent?,flags:Int,startId:Int):Int{
   when(intent?.action){
+   ACTION_POWER_CONNECTED->{charging=true;hidden=false;showCharging()}
    ACTION_HIDE->hidden=true
    ACTION_SHOW->showCharging()
    ACTION_STOP->{getSharedPreferences("charging_settings",0).edit().putBoolean("monitoring",false).apply();stopSelf()}
@@ -52,7 +61,7 @@ class ChargingService:Service(){
   }
  }
  private fun makeNotification(isCharging:Boolean=charging):Notification{
-  val open=PendingIntent.getActivity(this,1,Intent(this,ChargingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+  val open=PendingIntent.getActivity(this,1,Intent(this,ChargingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP),PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
   val stop=PendingIntent.getService(this,2,Intent(this,ChargingService::class.java).setAction(ACTION_STOP),PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
   val text=if(isCharging) "Зарядка подключена · нажмите, чтобы открыть экран" else "Мониторинг включён · ждём зарядку"
   return NotificationCompat.Builder(this,CHANNEL).setSmallIcon(android.R.drawable.ic_lock_idle_charging)
@@ -66,5 +75,6 @@ class ChargingService:Service(){
   const val CHANNEL="charging_screen";const val ACTION_UPDATE="com.chargingscreen.pro.UPDATE"
   const val ACTION_CLOSE="com.chargingscreen.pro.CLOSE";const val ACTION_HIDE="com.chargingscreen.pro.HIDE"
   const val ACTION_SHOW="com.chargingscreen.pro.SHOW";const val ACTION_STOP="com.chargingscreen.pro.STOP"
+  const val ACTION_POWER_CONNECTED="com.chargingscreen.pro.POWER_CONNECTED"
  }
 }
