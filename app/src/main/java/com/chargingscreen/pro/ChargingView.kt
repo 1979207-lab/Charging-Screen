@@ -39,7 +39,7 @@ class ChargingView(context:Context):View(context){
   paint.style=Paint.Style.FILL;paint.textAlign=Paint.Align.CENTER;paint.color=Color.WHITE
   paint.typeface=Typeface.create("sans-serif-light",Typeface.NORMAL)
   paint.textSize=(if(style==3)48f else 40f)*resources.displayMetrics.scaledDensity
-  canvas.drawText("$"+"percent%",x,y+14f*density,paint)
+  canvas.drawText(percent.toString()+"%",x,y+14f*density,paint)
   paint.color=color;paint.textSize=29f*resources.displayMetrics.scaledDensity;paint.typeface=Typeface.DEFAULT_BOLD
   canvas.drawText("ϟ",x,y-35f*density,paint)
  }
