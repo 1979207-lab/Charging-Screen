@@ -13,7 +13,7 @@ class ChargingService:Service(){
   super.onCreate();createChannel();startForeground(101,makeNotification())
   batteryReceiver=BatteryReceiver{plugged,level,temp->handleBattery(plugged,level,temp)}
   val f=IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-  if(Build.VERSION.SDK_INT>=33)registerReceiver(batteryReceiver,f,Context.RECEIVER_NOT_EXPORTED) else @Suppress("DEPRECATION") registerReceiver(batteryReceiver,f)
+  if(Build.VERSION.SDK_INT>=33)registerReceiver(batteryReceiver,f,Context.RECEIVER_NOT_EXPORTED) else registerReceiver(batteryReceiver,f)
  }
  private fun handleBattery(plugged:Boolean,level:Int,temp:Int){
   sendBroadcast(Intent(ACTION_UPDATE).setPackage(packageName).putExtra("charging",plugged).putExtra("level",level).putExtra("temperature",temp))
